@@ -78,7 +78,3 @@ dev : Branche d'intégration des fonctionnalités.
 feature/* : Développement de nouvelles fonctionnalités.
 
 fix/* : Corrections de bugs.
-
-## Auteurs
-Projet réalisé par Anne-Sophie Montenot, El-Fayed Manroufou et 
-Thouaïbat Sélim dans le cadre du Bachelor Concepteur Développeur Web Full Stack.
