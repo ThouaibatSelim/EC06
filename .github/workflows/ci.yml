@@ -54,6 +54,10 @@ jobs:
           java-version: 17
           cache: maven
 
+      - name: Rendre mvnw exécutable
+        working-directory: skillhub-auth
+        run: chmod +x mvnw
+
       - name: Install Spring Boot dependencies
         working-directory: skillhub-auth
         run: ./mvnw install -DskipTests -B
