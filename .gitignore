@@ -1,0 +1,19 @@
+# Laravel
+skillhub-backend/.env
+skillhub-backend/vendor/
+skillhub-backend/storage/logs/
+skillhub-backend/node_modules/
+
+# React
+skillhub-frontend/node_modules/
+skillhub-frontend/.env
+skillhub-frontend/build/
+
+# IDE
+.vscode/
+.idea/
+*.DS_Store
+
+# Racine
+.env
+skillhub.txt

@@ -1,0 +1,664 @@
+openapi: 3.0.3
+info:
+  title: SkillHub API
+  description: |
+    API REST de la plateforme SkillHub — Plateforme collaborative d'apprentissage en ligne.
+
+    ## Authentification
+    L'API utilise JWT (JSON Web Token). Pour les routes protégées, incluez le token dans le header :
+    Authorization: Bearer <token>
+    ## Rôles
+    - **Apprenant** : peut s'inscrire aux formations, suivre sa progression
+    - **Formateur** : peut créer, modifier et supprimer ses formations et modules
+  version: 1.0.0
+  contact:
+    name: SkillHub
+servers:
+  - url: http://localhost:8000/api
+    description: Serveur de développement local
+
+tags:
+  - name: Authentification
+    description: Inscription, connexion et profil
+  - name: Formations
+    description: Gestion des formations
+  - name: Modules
+    description: Gestion des modules d'une formation
+  - name: Inscriptions
+    description: Inscription et suivi des formations
+  - name: Formateur
+    description: Dashboard formateur
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        nom:
+          type: string
+          example: Dupont
+        prenom:
+          type: string
+          example: Jean
+        email:
+          type: string
+          example: jean@test.com
+        role:
+          type: string
+          enum: [apprenant, formateur]
+          example: apprenant
+        created_at:
+          type: string
+          format: date-time
+
+    Formation:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        titre:
+          type: string
+          example: Introduction à React
+        description:
+          type: string
+          example: Apprends les bases de React.js
+        categorie:
+          type: string
+          example: Développement web
+        niveau:
+          type: string
+          enum: [Débutant, Intermédiaire, Avancé]
+          example: Débutant
+        formateur_id:
+          type: integer
+          example: 2
+        nombre_vues:
+          type: integer
+          example: 120
+        enrollments_count:
+          type: integer
+          example: 42
+        created_at:
+          type: string
+          format: date-time
+        formateur:
+          $ref: "#/components/schemas/UserMinimal"
+
+    UserMinimal:
+      type: object
+      properties:
+        id:
+          type: integer
+        nom:
+          type: string
+        prenom:
+          type: string
+
+    Module:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        titre:
+          type: string
+          example: Introduction à JSX
+        contenu:
+          type: string
+          example: Contenu du module...
+        formation_id:
+          type: integer
+          example: 1
+        ordre:
+          type: integer
+          example: 1
+
+    Enrollment:
+      type: object
+      properties:
+        enrollment_id:
+          type: integer
+          example: 3
+        progression:
+          type: integer
+          example: 65
+        date_inscription:
+          type: string
+          format: date-time
+        formation:
+          $ref: "#/components/schemas/Formation"
+
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Non autorisé
+
+    ValidationError:
+      type: object
+      properties:
+        errors:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+          example:
+            email: ["L'email est déjà utilisé"]
+
+paths:
+  # ── AUTHENTIFICATION ──────────────────────────────────────────
+  /register:
+    post:
+      tags: [Authentification]
+      summary: Créer un compte utilisateur
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [nom, prenom, email, password, role]
+              properties:
+                nom:
+                  type: string
+                  example: Dupont
+                prenom:
+                  type: string
+                  example: Jean
+                email:
+                  type: string
+                  example: jean@test.com
+                password:
+                  type: string
+                  minLength: 6
+                  example: password123
+                role:
+                  type: string
+                  enum: [apprenant, formateur]
+                  example: apprenant
+      responses:
+        "201":
+          description: Inscription réussie
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Inscription réussie
+                  user:
+                    $ref: "#/components/schemas/User"
+                  token:
+                    type: string
+        "422":
+          description: Erreur de validation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationError"
+
+  /login:
+    post:
+      tags: [Authentification]
+      summary: Connexion et génération du token JWT
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                  example: jean@test.com
+                password:
+                  type: string
+                  example: password123
+      responses:
+        "200":
+          description: Connexion réussie
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Connexion réussie
+                  user:
+                    $ref: "#/components/schemas/User"
+                  token:
+                    type: string
+                    example: eyJ0eXAiOiJKV1Qi...
+        "401":
+          description: Email ou mot de passe incorrect
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /logout:
+    post:
+      tags: [Authentification]
+      summary: Déconnexion — invalide le token JWT
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: Déconnexion réussie
+        "401":
+          description: Non authentifié
+
+  /profile:
+    get:
+      tags: [Authentification]
+      summary: Récupérer le profil de l'utilisateur connecté
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: Profil utilisateur
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          description: Non authentifié
+
+  # ── FORMATIONS ────────────────────────────────────────────────
+  /formations:
+    get:
+      tags: [Formations]
+      summary: Récupérer la liste de toutes les formations
+      parameters:
+        - name: search
+          in: query
+          description: Recherche par mot-clé dans le titre
+          schema:
+            type: string
+            example: React
+        - name: categorie
+          in: query
+          description: Filtrer par catégorie
+          schema:
+            type: string
+            example: Développement web
+        - name: niveau
+          in: query
+          description: Filtrer par niveau
+          schema:
+            type: string
+            enum: [Débutant, Intermédiaire, Avancé]
+      responses:
+        "200":
+          description: Liste des formations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Formation"
+
+    post:
+      tags: [Formations]
+      summary: Créer une formation (formateur uniquement)
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [titre, description, categorie, niveau]
+              properties:
+                titre:
+                  type: string
+                  example: Introduction à React
+                description:
+                  type: string
+                  example: Apprends les bases de React.js
+                categorie:
+                  type: string
+                  example: Développement web
+                niveau:
+                  type: string
+                  enum: [Débutant, Intermédiaire, Avancé]
+                  example: Débutant
+      responses:
+        "201":
+          description: Formation créée
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  formation:
+                    $ref: "#/components/schemas/Formation"
+        "401":
+          description: Non authentifié
+        "403":
+          description: Accès refusé — rôle formateur requis
+        "422":
+          description: Erreur de validation
+
+  /formations/{id}:
+    get:
+      tags: [Formations]
+      summary: Récupérer les détails d'une formation (incrémente les vues)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        "200":
+          description: Détails de la formation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Formation"
+        "404":
+          description: Formation introuvable
+
+    put:
+      tags: [Formations]
+      summary: Modifier une formation (formateur propriétaire uniquement)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                titre:
+                  type: string
+                description:
+                  type: string
+                categorie:
+                  type: string
+                niveau:
+                  type: string
+                  enum: [Débutant, Intermédiaire, Avancé]
+      responses:
+        "200":
+          description: Formation mise à jour
+        "403":
+          description: Accès refusé
+        "404":
+          description: Formation introuvable
+
+    delete:
+      tags: [Formations]
+      summary: Supprimer une formation (formateur propriétaire uniquement)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Formation supprimée
+        "403":
+          description: Accès refusé
+        "404":
+          description: Formation introuvable
+
+  # ── MODULES ───────────────────────────────────────────────────
+  /formations/{id}/modules:
+    get:
+      tags: [Modules]
+      summary: Récupérer les modules d'une formation
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Liste des modules
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Module"
+
+    post:
+      tags: [Modules]
+      summary: Ajouter un module à une formation (formateur uniquement)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [titre]
+              properties:
+                titre:
+                  type: string
+                  example: Introduction à JSX
+                contenu:
+                  type: string
+                  example: Contenu pédagogique du module
+                ordre:
+                  type: integer
+                  example: 1
+      responses:
+        "201":
+          description: Module créé
+        "401":
+          description: Non authentifié
+        "403":
+          description: Accès refusé
+
+  /modules/{id}:
+    put:
+      tags: [Modules]
+      summary: Modifier un module (formateur propriétaire uniquement)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                titre:
+                  type: string
+                contenu:
+                  type: string
+                ordre:
+                  type: integer
+      responses:
+        "200":
+          description: Module mis à jour
+        "403":
+          description: Accès refusé
+        "404":
+          description: Module introuvable
+
+    delete:
+      tags: [Modules]
+      summary: Supprimer un module (formateur propriétaire uniquement)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Module supprimé
+        "403":
+          description: Accès refusé
+        "404":
+          description: Module introuvable
+
+  # ── INSCRIPTIONS ──────────────────────────────────────────────
+  /formations/{id}/inscription:
+    post:
+      tags: [Inscriptions]
+      summary: S'inscrire à une formation (apprenant uniquement)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "201":
+          description: Inscription réussie
+        "401":
+          description: Non authentifié
+        "403":
+          description: Accès refusé — rôle apprenant requis
+        "409":
+          description: Déjà inscrit à cette formation
+
+    delete:
+      tags: [Inscriptions]
+      summary: Se désinscrire d'une formation (apprenant uniquement)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Désinscription réussie
+        "404":
+          description: Inscription introuvable
+
+  /formations/{id}/progression:
+    put:
+      tags: [Inscriptions]
+      summary: Mettre à jour la progression d'un apprenant
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [progression]
+              properties:
+                progression:
+                  type: integer
+                  minimum: 0
+                  maximum: 100
+                  example: 65
+      responses:
+        "200":
+          description: Progression mise à jour
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  enrollment:
+                    $ref: "#/components/schemas/Enrollment"
+        "404":
+          description: Inscription introuvable
+
+  /apprenant/formations:
+    get:
+      tags: [Inscriptions]
+      summary: Récupérer les formations suivies par l'apprenant connecté
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: Liste des enrollments de l'apprenant
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Enrollment"
+        "401":
+          description: Non authentifié
+        "403":
+          description: Accès refusé
+
+  # ── FORMATEUR ─────────────────────────────────────────────────
+  /formateur/formations:
+    get:
+      tags: [Formateur]
+      summary: Récupérer les formations créées par le formateur connecté
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: Liste des formations du formateur
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Formation"
+        "401":
+          description: Non authentifié
+        "403":
+          description: Accès refusé — rôle formateur requis
