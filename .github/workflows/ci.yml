@@ -88,20 +88,24 @@ jobs:
           APP_MASTER_KEY: test_master_key_for_ci_only_32c
           JWT_SECRET: test_jwt_secret_for_ci_only
 
-      # ── SonarCloud (les deux projets) ─────────────────────────
-      - name: SonarCloud analysis — frontend
-        uses: SonarSource/sonarcloud-github-action@master
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        with:
-          projectBaseDir: skillhub-frontend
-
-      - name: SonarCloud analysis — backend
+      # ── SonarCloud (les deux projets requis par le sujet : Laravel + Spring Boot) ─
+      - name: SonarCloud analysis — backend (Laravel)
         uses: SonarSource/sonarcloud-github-action@master
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           projectBaseDir: skillhub-backend
+
+      - name: SonarCloud analysis — auth (Spring Boot)
+        working-directory: skillhub-auth
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: >
+          ./mvnw sonar:sonar
+          -Dsonar.projectKey=ThouaibatSelim_EC062
+          -Dsonar.organization=thouaibatselim
+          -Dsonar.host.url=https://sonarcloud.io
+          -Dsonar.token=${{ secrets.SONAR_TOKEN }}
 
       # ── Build images (Laravel + Spring Boot, taguées au SHA) ──
       - name: Build backend image
