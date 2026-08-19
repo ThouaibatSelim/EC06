@@ -1,0 +1,102 @@
+name: CI/CD SkillHub V2
+
+on:
+  push:
+    branches: [dev, main]
+  pull_request:
+    branches: [dev, main]
+
+jobs:
+  ci:
+    name: Install, Lint, Test, Build
+    runs-on: ubuntu-latest
+
+    services:
+      mongodb:
+        image: mongo:6
+        ports:
+          - 27017:27017
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: skillhub-frontend/package-lock.json
+
+      - name: Install frontend dependencies
+        working-directory: skillhub-frontend
+        run: npm install
+
+      - name: Lint frontend
+        working-directory: skillhub-frontend
+        run: npm run lint
+
+      - name: SonarCloud analysis
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          projectBaseDir: skillhub-frontend
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+          extensions: pdo, pdo_sqlite, sqlite3, mongodb-1.20.0
+          coverage: none
+
+      - name: Install backend dependencies
+        working-directory: skillhub-backend
+        run: composer install --no-interaction --prefer-dist --ignore-platform-req=ext-mongodb
+
+      - name: Run Laravel tests
+        working-directory: skillhub-backend
+        run: php artisan test
+        env:
+          APP_ENV: testing
+          APP_KEY: ${{ secrets.APP_KEY }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          AUTH_SERVICE_URL: http://skillhub-auth:8080
+          DB_CONNECTION: sqlite
+          DB_DATABASE: ":memory:"
+          MONGO_URI: mongodb://127.0.0.1:27017
+          MONGODB_DATABASE: skillhub_logs_test
+
+      - name: Build backend image
+        run: docker build -t skillhub-api:${{ github.sha }} ./skillhub-backend
+
+      - name: Build frontend image
+        run: docker build -t skillhub-frontend:${{ github.sha }} ./skillhub-frontend
+
+  cd:
+    name: Push images to Docker Hub
+    needs: ci
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - name: Build and push backend image
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/skillhub-api:${{ github.sha }} ./skillhub-backend
+          docker push ${{ secrets.DOCKER_USERNAME }}/skillhub-api:${{ github.sha }}
+
+      - name: Build and push frontend image
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/skillhub-frontend:${{ github.sha }} ./skillhub-frontend
+          docker push ${{ secrets.DOCKER_USERNAME }}/skillhub-frontend:${{ github.sha }}
