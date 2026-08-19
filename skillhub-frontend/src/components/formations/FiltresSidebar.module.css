@@ -1,0 +1,146 @@
+.sidebar { display: flex; flex-direction: column; gap: 16px; }
+
+.block {
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  border: 1.5px solid var(--color-border);
+  padding: 20px;
+}
+
+.blockTitle {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-dark);
+  margin-bottom: 12px;
+}
+
+.blockTitleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.resetBtn {
+  font-size: 11px;
+  color: var(--color-primary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  padding: 0;
+}
+
+.resetBtn:hover { text-decoration: underline; }
+
+/* Recherche */
+.searchWrapper { position: relative; }
+
+.searchIcon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  pointer-events: none;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 9px 12px 9px 32px;
+  border-radius: 8px;
+  border: 1.5px solid var(--color-border);
+  font-size: 13px;
+  color: var(--color-dark);
+  background: var(--color-bg);
+  box-sizing: border-box;
+  outline: none;
+  font-family: var(--font-family);
+  transition: border-color 0.15s;
+}
+
+.searchInput:focus { border-color: var(--color-primary); }
+
+/* Checkbox liste */
+.checkList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.checkLabel {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.checkLabel input[type="checkbox"] {
+  accent-color: var(--color-primary);
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.checkText {
+  font-size: 13px;
+  color: #374151;
+  flex: 1;
+}
+
+.checkCount {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  background: #F3F4F6;
+  color: var(--color-text-muted);
+  font-weight: 500;
+}
+
+/* Badge niveau dans filtre */
+.levelBadgeDebutant {
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  background: var(--color-debutant-bg);
+  color: var(--color-debutant-text);
+  font-weight: 600;
+}
+
+.levelBadgeIntermediaire {
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  background: var(--color-intermediaire-bg);
+  color: var(--color-intermediaire-text);
+  font-weight: 600;
+}
+
+.levelBadgeAvance {
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  background: var(--color-avance-bg);
+  color: var(--color-avance-text);
+  font-weight: 600;
+}
+
+/* Bouton reset global */
+.btnResetAll {
+  width: 100%;
+  font-size: 13px;
+  padding: 10px;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--color-text-muted);
+  border: 1.5px solid var(--color-border);
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.15s, color 0.15s;
+}
+
+.btnResetAll:hover {
+  background: var(--color-border-light);
+  color: var(--color-dark);
+}

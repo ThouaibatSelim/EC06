@@ -1,0 +1,93 @@
+#root {
+  min-height: 100vh;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   Variables CSS globales
+   Toutes les couleurs, espacements et typographies de l'app
+   sont centralisés ici — modifier une variable met à jour
+   l'ensemble de l'interface
+   ───────────────────────────────────────────────────────────────── */
+:root {
+  /* Couleurs principales */
+  --color-dark:           #1c1033;
+  --color-dark-2:         #2a1a4e;
+  --color-primary:        #2d8a6e;
+  --color-primary-light:  #e8f5ef;
+  --color-primary-border: #c8e8d8;
+  --color-accent:         #ff8c69;
+  --color-progress:       #f5a623;
+
+  /* Badges de niveau — textes volontairement plus foncés
+     que la charte d'origine pour meilleur contraste WCAG */
+  --color-debutant-bg:          #e8f5ef;
+  --color-debutant-text:        #1a6b4a;
+  --color-intermediaire-bg:     #ebf4ff;
+  --color-intermediaire-text:   #1d6fb8;
+  --color-avance-bg:            #fff3e0;
+  --color-avance-text:          #b84500;
+
+  /* Neutres — hiérarchie de gris pour le texte */
+  --color-bg:           #fafafa;
+  --color-white:        #ffffff;
+  --color-border:       #d1d5db;
+  --color-border-light: #f3f4f6;
+  --color-text:         #1c1033;
+  --color-text-muted:   #4b5563; /* texte secondaire */
+  --color-text-faint:   #6b7280; /* texte tertiaire (labels, meta) */
+
+  /* Danger — désinscription, suppression */
+  --color-danger:        #e05a3a;
+  --color-danger-bg:     #fff0ee;
+  --color-danger-border: #ff8c69;
+
+  /* Typographie */
+  --font-family: "Segoe UI", sans-serif;
+
+  /* Border radius — système cohérent sur toute l'app */
+  --radius-sm:   7px;
+  --radius-md:   10px;
+  --radius-lg:   14px;
+  --radius-xl:   16px;
+  --radius-full: 99px; /* pilules / badges */
+}
+
+/* ── Reset ───────────────────────────────────────────────────────
+   box-sizing: border-box garantit que padding et border sont
+   inclus dans la largeur/hauteur déclarée — comportement
+   plus prévisible que le défaut content-box
+   ──────────────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin:     0;
+  padding:    0;
+}
+
+body {
+  font-family:              var(--font-family);
+  font-size:                14px;
+  color:                    var(--color-dark);
+  background:               var(--color-bg);
+  /* Lissage des polices pour un rendu net sur Mac/iOS */
+  -webkit-font-smoothing:   antialiased;
+  -moz-osx-font-smoothing:  grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family:  var(--font-family);
+  line-height:  1.3;
+}
+
+p    { line-height: 1.6; }
+a    { color: inherit; text-decoration: none; }
+
+/* Force la font sur tous les éléments de formulaire
+   — les navigateurs appliquent leur propre font par défaut
+   sur input/textarea/select/button sans ce reset */
+button, input, textarea, select {
+  font-family: var(--font-family);
+}
+
+button { cursor: pointer; }

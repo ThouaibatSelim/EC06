@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SkillHub — Documentation API</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.17.14/swagger-ui.min.css" />
+    <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+
+      body { font-family: 'Segoe UI', sans-serif; background: #1C1033; }
+
+      .topbar-custom {
+        background: #1C1033;
+        padding: 16px 32px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+      }
+
+      .topbar-custom .logo {
+        font-size: 20px;
+        font-weight: 700;
+        color: #fff;
+        text-decoration: none;
+      }
+
+      .topbar-custom .logo span { color: #FF8C69; }
+
+      .topbar-custom .badge {
+        font-size: 11px;
+        padding: 4px 12px;
+        border-radius: 99px;
+        background: rgba(45,138,110,0.25);
+        color: #5DCAA5;
+        font-weight: 600;
+        border: 1px solid rgba(45,138,110,0.4);
+      }
+
+      #swagger-ui { max-width: 1200px; margin: 0 auto; background: #fff; }
+
+      .swagger-ui .topbar { display: none; }
+
+      .swagger-ui .info { padding: 24px 0 0; }
+
+      .swagger-ui .info .title {
+        color: #1C1033;
+        font-size: 28px;
+      }
+    </style>
+  </head>
+  <body>
+
+    <!-- Navbar custom -->
+    <div class="topbar-custom">
+      <a class="logo" href="#">Skill<span>Hub</span></a>
+      <span class="badge">Documentation API v1.0</span>
+    </div>
+
+    <div id="swagger-ui"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.17.14/swagger-ui-bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.17.14/swagger-ui-standalone-preset.min.js"></script>
+    <script>
+      window.onload = () => {
+        SwaggerUIBundle({
+          url: './openapi.yaml',
+          dom_id: '#swagger-ui',
+          presets: [
+            SwaggerUIBundle.presets.apis,
+            SwaggerUIStandalonePreset,
+          ],
+          layout: 'StandaloneLayout',
+          deepLinking: true,
+          displayRequestDuration: true,
+          defaultModelsExpandDepth: 1,
+          defaultModelExpandDepth: 1,
+          docExpansion: 'list',
+          filter: true,
+          tryItOutEnabled: true,
+        });
+      };
+    </script>
+  </body>
+</html>

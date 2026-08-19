@@ -1,0 +1,274 @@
+/* ── Conteneur principal ── */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 48px;
+  background: var(--color-dark);
+  position: relative;
+  z-index: 100;
+  min-height: 60px;
+}
+
+/* ── Logo ── */
+.logo {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-white);
+  text-decoration: none;
+}
+
+.logo:hover {
+  color: var(--color-white);
+  text-decoration: none;
+}
+
+.logoAccent {
+  color: var(--color-accent);
+}
+
+/* ── Groupe droite ── */
+.navRight {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+/* ── Lien Formations ── */
+.navLink {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.75);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.navLink:hover {
+  color: var(--color-white);
+}
+
+.navLinkActive {
+  color: var(--color-accent);
+  font-weight: 600;
+  border-bottom: 2px solid var(--color-accent);
+  padding-bottom: 2px;
+}
+
+/* ── Boutons non connecté ── */
+.btnConnexion {
+  font-size: 13px;
+  padding: 8px 20px;
+  border-radius: var(--radius-sm);
+  border: 2px solid var(--color-white);
+  background: transparent;
+  color: var(--color-white);
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    color 0.15s;
+}
+
+.btnConnexion:hover {
+  background: var(--color-white);
+  color: var(--color-dark);
+}
+
+.btnInscription {
+  font-size: 13px;
+  padding: 8px 20px;
+  border-radius: var(--radius-sm);
+  border: 2px solid var(--color-accent);
+  background: var(--color-accent);
+  color: var(--color-white);
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.btnInscription:hover {
+  opacity: 0.88;
+}
+
+/* ── Profil connecté ── */
+.profileWrapper {
+  position: relative;
+  padding-bottom: 8px; /* ← comble le gap */
+  margin-bottom: -8px;
+}
+
+.profileTrigger {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 8px;
+  transition: background 0.15s;
+}
+
+.profileTrigger:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-white);
+  flex-shrink: 0;
+}
+
+.avatarFormateur {
+  background: var(--color-primary);
+}
+
+.avatarApprenant {
+  background: var(--color-accent);
+}
+
+.profileName {
+  font-size: 13px;
+  color: var(--color-white);
+  font-weight: 500;
+}
+
+/* ── Dropdown ── */
+.dropdown {
+  position: absolute;
+  top: calc(100% + 0px);
+  right: 0;
+  background: var(--color-white);
+  border-radius: var(--radius-md);
+  border: 1.5px solid #e5e7eb;
+  min-width: 180px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  z-index: 200;
+  /* animation d'apparition */
+  animation: fadeIn 0.12s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdownHeader {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.dropdownName {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.dropdownRole {
+  font-size: 11px;
+  color: var(--color-text-faint);
+  margin-top: 2px;
+}
+
+.dropdownBody {
+  padding: 4px;
+}
+
+.dropdownBtn {
+  width: 100%;
+  text-align: left;
+  font-size: 13px;
+  padding: 9px 12px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.12s;
+}
+
+.dropdownBtn:hover {
+  background: var(--color-border-light);
+  color: var(--color-text);
+}
+
+.dropdownDivider {
+  height: 1px;
+  background: var(--color-border-light);
+  margin: 4px 0;
+}
+
+.dropdownBtnDanger {
+  width: 100%;
+  text-align: left;
+  font-size: 13px;
+  padding: 9px 12px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.12s;
+  /* spécifique danger */
+  color: var(--color-danger);
+  font-weight: 500;
+}
+
+.dropdownBtnDanger:hover {
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 12px 20px;
+  }
+
+  .navRight {
+    gap: 12px;
+  }
+
+  .btnConnexion,
+  .btnInscription {
+    padding: 7px 14px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar {
+    padding: 10px 16px;
+  }
+
+  .profileName {
+    display: none;
+  }
+
+  /* ← Supprime le display:none sur btnConnexion */
+  .btnConnexion {
+    padding: 7px 10px;
+    font-size: 11px;
+  }
+
+  .btnInscription {
+    padding: 7px 10px;
+    font-size: 11px;
+  }
+}
