@@ -56,11 +56,11 @@ services:
     healthcheck:
       test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
       interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 20s
-    mem_limit: 256m
-    cpus: "0.3"
+      timeout: 10s
+      retries: 8
+      start_period: 40s
+    mem_limit: 512m
+    cpus: "0.5"
 
 
   # ── Spring Boot (Auth) ──────────────────────────────────────────

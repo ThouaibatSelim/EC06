@@ -23,6 +23,12 @@ class Enrollment extends Model
         'utilisateur_id', // FK → table users
         'formation_id',   // FK → table formations
         'progression',    // entier 0-100 (pourcentage)
+        'last_activity_at', // dernier accès de l'apprenant à la formation
+        // (règle métier : désinscription auto après 30j d'inactivité)
+    ];
+
+    protected $casts = [
+        'last_activity_at' => 'datetime',
     ];
 
     // Une inscription appartient à une formation

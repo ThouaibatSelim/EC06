@@ -84,6 +84,9 @@ Route::middleware('jwt.verify')->group(function () {
         Route::get('/apprenant/formations',           [EnrollmentController::class, 'mesFormations']);
 
         // Mise à jour de la progression dans une formation
-        Route::put('/formations/{id}/progression',    [EnrollmentController::class, 'updateProgression']);
+        // track.activity : marque l'inscription comme active
+        // (règle métier : désinscription auto après 30j d'inactivité)
+        Route::put('/formations/{id}/progression', [EnrollmentController::class, 'updateProgression'])
+            ->middleware('track.activity');
     });
 });

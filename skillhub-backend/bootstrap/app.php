@@ -52,6 +52,10 @@ return Application::configure(basePath: dirname(__DIR__))
             // Vérifie que l'utilisateur a le bon rôle
             // Usage : 'role:formateur' ou 'role:apprenant'
             'role'       => \App\Http\Middleware\CheckRole::class,
+
+            // Met à jour last_activity_at sur l'inscription de
+            // l'apprenant à chaque accès à une formation suivie
+            'track.activity' => \App\Http\Middleware\UpdateEnrollmentActivityMiddleware::class,
         ]);
 
         // ── Redirection des invités ───────────────────────────
