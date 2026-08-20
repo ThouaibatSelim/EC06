@@ -54,6 +54,10 @@ jobs:
           java-version: 17
           cache: maven
 
+      - name: Rendre mvnw exécutable
+        working-directory: skillhub-auth
+        run: chmod +x mvnw
+
       - name: Install Spring Boot dependencies
         working-directory: skillhub-auth
         run: ./mvnw install -DskipTests -B
@@ -101,7 +105,7 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: >
-          ./mvnw sonar:sonar
+          ./mvnw org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
           -Dsonar.projectKey=ThouaibatSelim_EC062
           -Dsonar.organization=thouaibatselim
           -Dsonar.host.url=https://sonarcloud.io

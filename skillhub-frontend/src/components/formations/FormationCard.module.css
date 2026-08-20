@@ -1,0 +1,108 @@
+.card {
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  border: 1.5px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.card:hover {
+  box-shadow: 0 6px 24px rgba(28, 16, 51, 0.10);
+  transform: translateY(-2px);
+}
+
+.cardBody   { padding: 16px 16px 0; }
+.cardFooter {
+  padding: 12px 16px;
+  border-top: 1px solid var(--color-border-light);
+  margin-top: 12px;
+}
+
+.cardCat {
+  font-size: 10px;
+  color: var(--color-text-faint);
+  font-weight: 500;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.cardTitle {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-dark);
+  margin: 0 0 5px;
+  line-height: 1.4;
+}
+
+.cardDesc {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  margin: 0;
+  line-height: 1.55;
+}
+
+.cardAuthor {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-dark);
+  margin-bottom: 4px;
+}
+
+.cardMeta {
+  display: flex;
+  gap: 10px;
+  font-size: 10px;
+  color: var(--color-text-faint);
+  margin-bottom: 10px;
+}
+
+.btnDetail {
+  width: 100%;
+  font-size: 12px;
+  padding: 8px;
+  border-radius: 7px;
+  background: var(--color-dark);
+  color: var(--color-white);
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: opacity 0.15s;
+}
+
+.btnDetail:hover { opacity: 0.85; }
+
+/* Badges niveau */
+.badgeDebutant {
+  display: inline-block;
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  background: var(--color-debutant-bg);
+  color: var(--color-debutant-text);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.badgeIntermediaire {
+  display: inline-block;
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  background: var(--color-intermediaire-bg);
+  color: var(--color-intermediaire-text);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.badgeAvance {
+  display: inline-block;
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  background: var(--color-avance-bg);
+  color: var(--color-avance-text);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
